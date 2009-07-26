@@ -30,7 +30,7 @@
 ;;; Commentary: 
 ;;  ==========
 ;;
-;; Tested on emacs23.1 with python-mode.el.
+;; Tested on emacs23.1 with ipython-9.1 and python-mode.el.
 ;; This file fix also normal completion (tab without anything) in the ipython-shell.
 ;; This file reuse some code of ipython.el.
 ;;
@@ -52,6 +52,8 @@
 ;; (require 'anything-ipython)
 ;; (add-hook 'python-mode-hook #'(lambda ()
 ;;                                 (define-key py-mode-map (kbd "M-<tab>") 'anything-ipython-complete)))
+;; (add-hook 'ipython-shell-hook #'(lambda ()
+;;                                   (define-key py-mode-map (kbd "M-<tab>") 'anything-ipython-complete)))
 ;;
 ;;  Usage: 
 ;;  =====
