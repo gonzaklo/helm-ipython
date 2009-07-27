@@ -5,8 +5,8 @@
 ;; 
 ;; Created: sam. juil. 25 18:48:31 2009 (+0200)
 ;; Version: 
-;; URL: 
-;; Keywords: 
+;; X-URL: http://mercurial.intuxication.org/hg/anythingipython
+;; Keywords: ipython, python, completion. 
 ;; Compatibility: 
 ;; 
 ;; This program is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@
 ;;; Commentary: 
 ;;  ==========
 ;;
-;; Tested on emacs23.1 with ipython-9.1 and python-mode.el.
+;; Tested on emacs23.1 with python2.6, ipython-9.1 and python-mode.el.
 ;; This file fix also normal completion (tab without anything) in the ipython-shell.
 ;; This file reuse some code of ipython.el.
 ;;
@@ -82,7 +82,7 @@
 ;; 
 ;;; Change log:
 ;;
-;; 
+;; http://mercurial.intuxication.org/hg/anythingipython
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
