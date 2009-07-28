@@ -137,7 +137,9 @@ Return a completion list according to `pattern'."
 (defvar anything-source-ipython
   '((name . "Ipython completion")
     (candidates . (lambda ()
-                    (anything-ipython-completion-list anything-pattern)))
+                    (condition-case nil
+                        (anything-ipython-completion-list anything-pattern)
+                      (error nil))))
     (action . anything-ipyton-default-action)
     (volatile)
     (requires-pattern . 2)))
