@@ -45,7 +45,7 @@
 ;;     import rlcompleter2
 ;;     rlcompleter2.setup()
 ;;
-;;  You may want to use also anything-show-completion.el:
+;;  You may want to use also anything-show-completion.el:(facultative)
 ;;  http://www.emacswiki.org/cgi-bin/emacs/anything-show-completion.el
 ;;
 ;;  Install: 
@@ -61,7 +61,7 @@
 ;; (add-hook 'ipython-shell-hook #'(lambda ()
 ;;                                   (define-key py-mode-map (kbd "M-<tab>") 'anything-ipython-complete)))
 ;;
-;; If you want to use anything-show-completion.el,
+;; If you want to use anything-show-completion.el,(facultative)
 ;; <http://www.emacswiki.org/cgi-bin/emacs/anything-show-completion.el>
 ;; add these lines:
 ;;
@@ -71,11 +71,13 @@
 ;;
 ;;  Usage: 
 ;;  =====
-;; 1) From your *.py file, start interpreter with C-c C-!
+;; 1) From your *.py file, start interpreter with C-c !
 ;; 2) Import module(s) you need for completion from interpreter.
 ;;    e.g "import os"
 ;;    You can also import all import entries of your current *.py file
-;;    with `anything-ipython-import-modules-from-buffer'
+;;    with `anything-ipython-import-modules-from-buffer'.
+;;    Note that `py-execute-buffer' (C-c C-c) will load also all modules
+;;    of your .py file.
 ;; 3) Use M-x anything-ipython-complete or M-<tab> to have completion.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -131,6 +133,7 @@ Return a completion list according to `pattern'."
     (all-completions pattern completion-table)))
 
 (defun anything-ipyton-default-action (elm)
+  "Insert completion at point."
   (let ((initial-pattern (anything-ipython-get-initial-pattern)))
     (delete-char (- (length initial-pattern)))
     (insert elm)))
@@ -148,6 +151,7 @@ Return a completion list according to `pattern'."
 ;; (anything 'anything-source-ipython)
 
 (defun anything-ipython-get-initial-pattern ()
+  "Get the pattern to complete from."
   (let ((beg (save-excursion
                (skip-chars-backward "a-z0-9A-Z_./" (point-at-bol))
                (point))) 
@@ -155,11 +159,13 @@ Return a completion list according to `pattern'."
     (buffer-substring-no-properties beg end)))
 
 (defun anything-ipython-complete ()
+  "Preconfigured anything for ipython completions."
   (interactive)
   (let ((initial-pattern (anything-ipython-get-initial-pattern)))
     (anything 'anything-source-ipython initial-pattern)))
 
 (defun anything-ipython-import-modules-from-buffer ()
+  "Allow user to execute only the import lines of the current *.py file."
   (interactive)
   (with-current-buffer (current-buffer)
     (goto-char (point-min))
