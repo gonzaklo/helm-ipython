@@ -99,6 +99,12 @@
 (define-key py-shell-map (kbd "\t") 'ipython-complete)
 (setq ipython-completion-command-string "print(';'.join(__IP.Completer.all_completions('%s')))\n")
 
+(defadvice ipython-shell-hook (after unset-completion-key () activate)
+  (define-key py-mode-map (kbd "M-<tab>") 'anything-ipython-complete))
+
+;; (add-hook 'py-shell-hook #'(lambda ()
+;;                              (define-key py-mode-map (kbd "M-<tab>") 'anything-ipython-complete)))
+          
 ;; Modify original `ipython-complete' to fit with anything.
 (defun anything-ipython-completion-list (pattern)
   "Try to complete the python symbol before point.
@@ -161,6 +167,7 @@ Return a completion list according to `pattern'."
 (defun anything-ipython-complete ()
   "Preconfigured anything for ipython completions."
   (interactive)
+  (delete-other-windows)
   (let ((initial-pattern (anything-ipython-get-initial-pattern)))
     (anything 'anything-source-ipython initial-pattern)))
 
