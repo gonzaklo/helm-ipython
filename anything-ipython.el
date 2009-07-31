@@ -102,9 +102,6 @@
 (defadvice ipython-shell-hook (after unset-completion-key () activate)
   (define-key py-mode-map (kbd "M-<tab>") 'anything-ipython-complete))
 
-;; (add-hook 'py-shell-hook #'(lambda ()
-;;                              (define-key py-mode-map (kbd "M-<tab>") 'anything-ipython-complete)))
-          
 ;; Modify original `ipython-complete' to fit with anything.
 (defun anything-ipython-completion-list (pattern)
   "Try to complete the python symbol before point.
