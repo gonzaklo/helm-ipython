@@ -51,15 +51,14 @@
 ;;  Install: 
 ;;  =======
 ;;
-;; Setup anything python:
+;; Setup anything-ipython:
 ;; Put this file in your load path.
 ;; Add to .emacs:
 ;;
 ;; (require 'anything-ipython)
-;; (add-hook 'python-mode-hook #'(lambda ()
-;;                                 (define-key py-mode-map (kbd "M-<tab>") 'anything-ipython-complete)))
-;; (add-hook 'ipython-shell-hook #'(lambda ()
-;;                                   (define-key py-mode-map (kbd "M-<tab>") 'anything-ipython-complete)))
+;; (define-key py-mode-map (kbd "M-<tab>") 'anything-ipython-complete)
+;; (define-key py-shell-map (kbd "M-<tab>") 'anything-ipython-complete)
+;; (define-key py-mode-map (kbd "C-c M") 'anything-ipython-import-modules-from-buffer)
 ;;
 ;; If you want to use anything-show-completion.el,(facultative)
 ;; <http://www.emacswiki.org/cgi-bin/emacs/anything-show-completion.el>
@@ -71,7 +70,7 @@
 ;;
 ;;  Usage: 
 ;;  =====
-;; 1) From your *.py file, start interpreter with C-c !
+;; 1) From your *.py file, start ipython interpreter with C-c !
 ;; 2) Import module(s) you need for completion from interpreter.
 ;;    e.g "import os"
 ;;    You can also import all import entries of your current *.py file
