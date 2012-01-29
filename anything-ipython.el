@@ -120,8 +120,7 @@ Return a completion list according to `pattern'."
     (process-send-string python-process cmd-args)
     (accept-process-output python-process)
     (setq completions  ; ipython completion return string like a;b;c;d;e\n
-          (split-string (substring ugly-return 0 (anything-c-position ?\n ugly-return
-                                                                      :test 'equal)) sep))
+          (split-string (substring ugly-return 0 (anything-c-position ?\n ugly-return)) sep))
                                         ; (message (format "DEBUG completions: %S" completions))
     (setq completion-table (loop for str in completions
                               collect (list str nil)))
