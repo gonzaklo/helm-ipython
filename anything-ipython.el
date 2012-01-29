@@ -1,4 +1,4 @@
-;;; anything-ipython.el --- 
+;;; anything-ipython.el --- python completion using ipython and anything. 
 ;; 
 ;; Author: Thierry Volpiatto
 ;; Maintainer: Thierry Volpiatto
