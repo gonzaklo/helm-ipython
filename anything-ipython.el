@@ -60,14 +60,6 @@
 ;; (define-key py-shell-map (kbd "M-<tab>") 'anything-ipython-complete)
 ;; (define-key py-mode-map (kbd "C-c M") 'anything-ipython-import-modules-from-buffer)
 ;;
-;; If you want to use anything-show-completion.el,(facultative)
-;; <http://www.emacswiki.org/cgi-bin/emacs/anything-show-completion.el>
-;; add these lines:
-;;
-;; (when (require 'anything-show-completion nil t)
-;;   (use-anything-show-completion 'anything-ipython-complete
-;;                                 '(length initial-pattern)))
-;;
 ;;  Usage: 
 ;;  =====
 ;; 1) From your *.py file, start ipython interpreter with C-c !
@@ -93,6 +85,7 @@
 
 (eval-when-compile (require 'cl))
 (require 'ipython)
+(require 'anything-config) ; For `with-anything-show-completion'
 
 ;; Fix some bugs in ipython.el:
 (define-key py-shell-map (kbd "\t") 'ipython-complete)
@@ -165,7 +158,8 @@ Return a completion list according to `pattern'."
   (interactive)
   (delete-other-windows)
   (let ((initial-pattern (anything-ipython-get-initial-pattern)))
-    (anything 'anything-source-ipython initial-pattern)))
+    (with-anything-show-completion (- (point) (length initial-pattern)) (point)
+      (anything 'anything-source-ipython initial-pattern))))
 
 (defun anything-ipython-import-modules-from-buffer ()
   "Allow user to execute only the import lines of the current *.py file."
