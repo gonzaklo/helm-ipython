@@ -1,11 +1,11 @@
-;;; anything-ipython.el --- python completion using ipython and anything. 
+;;; helm-ipython.el --- python completion using ipython and helm. 
 ;; 
 ;; Author: Thierry Volpiatto
 ;; Maintainer: Thierry Volpiatto
 ;; 
 ;; Created: sam. juil. 25 18:48:31 2009 (+0200)
 ;; Version: 
-;; X-URL: http://mercurial.intuxication.org/hg/anythingipython
+;; X-URL: http://mercurial.intuxication.org/hg/helmipython
 ;; Keywords: ipython, python, completion. 
 ;; Compatibility: 
 ;; 
@@ -31,7 +31,7 @@
 ;;  ==========
 ;;
 ;; Tested on emacs23.1 with python2.6, ipython-9.1 and python-mode.el.
-;; This file fix also normal completion (tab without anything) in the ipython-shell.
+;; This file fix also normal completion (tab without helm) in the ipython-shell.
 ;; This file reuse some code of ipython.el.
 ;;
 ;;  Dependencies:
@@ -45,20 +45,20 @@
 ;;     import rlcompleter2
 ;;     rlcompleter2.setup()
 ;;
-;;  You may want to use also anything-show-completion.el:(facultative)
-;;  http://www.emacswiki.org/cgi-bin/emacs/anything-show-completion.el
+;;  You may want to use also helm-show-completion.el:(facultative)
+;;  http://www.emacswiki.org/cgi-bin/emacs/helm-show-completion.el
 ;;
 ;;  Install: 
 ;;  =======
 ;;
-;; Setup anything-ipython:
+;; Setup helm-ipython:
 ;; Put this file in your load path.
 ;; Add to .emacs:
 ;;
-;; (require 'anything-ipython)
-;; (define-key py-mode-map (kbd "M-<tab>") 'anything-ipython-complete)
-;; (define-key py-shell-map (kbd "M-<tab>") 'anything-ipython-complete)
-;; (define-key py-mode-map (kbd "C-c M") 'anything-ipython-import-modules-from-buffer)
+;; (require 'helm-ipython)
+;; (define-key py-mode-map (kbd "M-<tab>") 'helm-ipython-complete)
+;; (define-key py-shell-map (kbd "M-<tab>") 'helm-ipython-complete)
+;; (define-key py-mode-map (kbd "C-c M") 'helm-ipython-import-modules-from-buffer)
 ;;
 ;;  Usage: 
 ;;  =====
@@ -66,16 +66,16 @@
 ;; 2) Import module(s) you need for completion from interpreter.
 ;;    e.g "import os"
 ;;    You can also import all import entries of your current *.py file
-;;    with `anything-ipython-import-modules-from-buffer'.
+;;    with `helm-ipython-import-modules-from-buffer'.
 ;;    Note that `py-execute-buffer' (C-c C-c) will load also all modules
 ;;    of your .py file.
-;; 3) Use M-x anything-ipython-complete or M-<tab> to have completion.
+;; 3) Use M-x helm-ipython-complete or M-<tab> to have completion.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
 ;;; Change log:
 ;;
-;; http://mercurial.intuxication.org/hg/anythingipython
+;; http://mercurial.intuxication.org/hg/helmipython
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
@@ -85,17 +85,17 @@
 
 (eval-when-compile (require 'cl))
 (require 'ipython)
-(require 'anything-config) ; For `with-anything-show-completion'
+(require 'helm-config) ; For `with-helm-show-completion'
 
 ;; Fix some bugs in ipython.el:
 (define-key py-shell-map (kbd "\t") 'ipython-complete)
 (setq ipython-completion-command-string "print(';'.join(__IP.Completer.all_completions('%s')))\n")
 
 (defadvice ipython-shell-hook (after unset-completion-key () activate)
-  (define-key py-mode-map (kbd "M-<tab>") 'anything-ipython-complete))
+  (define-key py-mode-map (kbd "M-<tab>") 'helm-ipython-complete))
 
-;; Modify original `ipython-complete' to fit with anything.
-(defun anything-ipython-completion-list (pattern)
+;; Modify original `ipython-complete' to fit with helm.
+(defun helm-ipython-completion-list (pattern)
   "Try to complete the python symbol before point.
 Only knows about the stuff in the current *Python* session.
 Return a completion list according to `pattern'."
@@ -120,32 +120,32 @@ Return a completion list according to `pattern'."
     (process-send-string python-process cmd-args)
     (accept-process-output python-process)
     (setq completions  ; ipython completion return string like a;b;c;d;e\n
-          (split-string (substring ugly-return 0 (anything-c-position ?\n ugly-return)) sep))
+          (split-string (substring ugly-return 0 (helm-c-position ?\n ugly-return)) sep))
                                         ; (message (format "DEBUG completions: %S" completions))
     (setq completion-table (loop for str in completions
                               collect (list str nil)))
                                         ; (message (format "DEBUG completions: %S" completion-table))
     (all-completions pattern completion-table)))
 
-(defun anything-ipyton-default-action (elm)
+(defun helm-ipyton-default-action (elm)
   "Insert completion at point."
-  (let ((initial-pattern (anything-ipython-get-initial-pattern)))
+  (let ((initial-pattern (helm-ipython-get-initial-pattern)))
     (delete-char (- (length initial-pattern)))
     (insert elm)))
 
-(defvar anything-source-ipython
+(defvar helm-source-ipython
   '((name . "Ipython completion")
     (candidates . (lambda ()
                     (condition-case nil
-                        (anything-ipython-completion-list anything-pattern)
+                        (helm-ipython-completion-list helm-pattern)
                       (error nil))))
-    (action . anything-ipyton-default-action)
+    (action . helm-ipyton-default-action)
     (volatile)
     (requires-pattern . 2)))
 
-;; (anything 'anything-source-ipython)
+;; (helm 'helm-source-ipython)
 
-(defun anything-ipython-get-initial-pattern ()
+(defun helm-ipython-get-initial-pattern ()
   "Get the pattern to complete from."
   (let ((beg (save-excursion
                (skip-chars-backward "a-z0-9A-Z_./" (point-at-bol))
@@ -153,15 +153,15 @@ Return a completion list according to `pattern'."
         (end (point)))
     (buffer-substring-no-properties beg end)))
 
-(defun anything-ipython-complete ()
-  "Preconfigured anything for ipython completions."
+(defun helm-ipython-complete ()
+  "Preconfigured helm for ipython completions."
   (interactive)
   (delete-other-windows)
-  (let ((initial-pattern (anything-ipython-get-initial-pattern)))
-    (with-anything-show-completion (- (point) (length initial-pattern)) (point)
-      (anything 'anything-source-ipython initial-pattern))))
+  (let ((initial-pattern (helm-ipython-get-initial-pattern)))
+    (with-helm-show-completion (- (point) (length initial-pattern)) (point)
+      (helm 'helm-source-ipython initial-pattern))))
 
-(defun anything-ipython-import-modules-from-buffer ()
+(defun helm-ipython-import-modules-from-buffer ()
   "Allow user to execute only the import lines of the current *.py file."
   (interactive)
   (with-current-buffer (current-buffer)
@@ -180,7 +180,7 @@ Return a completion list according to `pattern'."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Provide
-(provide 'anything-ipython)
+(provide 'helm-ipython)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; anything-ipython.el ends here
+;;; helm-ipython.el ends here
