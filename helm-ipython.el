@@ -45,8 +45,6 @@
 ;;     import rlcompleter2
 ;;     rlcompleter2.setup()
 ;;
-;;  You may want to use also helm-show-completion.el:(facultative)
-;;  http://www.emacswiki.org/cgi-bin/emacs/helm-show-completion.el
 ;;
 ;;  Install: 
 ;;  =======
@@ -72,20 +70,14 @@
 ;; 3) Use M-x helm-ipython-complete or M-<tab> to have completion.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 
-;;; Change log:
-;;
-;; http://mercurial.intuxication.org/hg/helmipython
-;; 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 
+ 
 ;;; Code:
 
 ;; <2009-07-25 Sam. 18:03>
 
 (eval-when-compile (require 'cl))
 (require 'ipython)
-(require 'helm-config) ; For `with-helm-show-completion'
+(require 'helm-elisp) ; For `with-helm-show-completion'
 
 ;; Fix some bugs in ipython.el:
 (define-key py-shell-map (kbd "\t") 'ipython-complete)
